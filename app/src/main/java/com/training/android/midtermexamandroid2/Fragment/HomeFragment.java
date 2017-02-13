@@ -66,7 +66,6 @@ public class HomeFragment extends Fragment {
                     if (!wifi.isWifiEnabled()) {
                         Toast.makeText(getContext(), "Connect to a network", Toast.LENGTH_SHORT).show();
                     } else {
-
                         if (search.isEmpty()) {
                             Toast.makeText(getContext(), "Invalid search", Toast.LENGTH_SHORT).show();
                         } else {
