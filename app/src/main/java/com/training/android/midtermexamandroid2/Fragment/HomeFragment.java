@@ -2,6 +2,8 @@ package com.training.android.midtermexamandroid2.Fragment;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,6 +41,7 @@ public class HomeFragment extends Fragment {
     AlbumAdapter mAdapter;
     RecyclerView mRecycler;
     EditText mSearch;
+    TextView mTvString;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -50,6 +53,8 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         mRecycler = (RecyclerView) view.findViewById(R.id.rvCards);
         mSearch = (EditText) view.findViewById(R.id.etSearch);
+        mTvString = (TextView) view.findViewById(R.id.tvString);
+        final WifiManager wifi = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
 
         setHasOptionsMenu(true);
 
@@ -58,17 +63,17 @@ public class HomeFragment extends Fragment {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
                     String search = mSearch.getText().toString();
-                    if (search.isEmpty()) {
-                        Toast.makeText(getContext(), "Invalid search", Toast.LENGTH_SHORT).show();
+                    if (!wifi.isWifiEnabled()) {
+                        Toast.makeText(getContext(), "Connect to a network", Toast.LENGTH_SHORT).show();
                     } else {
-                        url = "http://ws.audioscrobbler.com/2.0/?method=album.search&album="
-                                + search + "&api_key=b6ff6fe3192f66735629799c2f4dd988&format=json";
-                        new GetList().execute();
-                        mAdapter = new AlbumAdapter(data);
-                        mRecycler.setAdapter(mAdapter);
-                        mRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
+                        if (search.isEmpty()) {
+                            Toast.makeText(getContext(), "Invalid search", Toast.LENGTH_SHORT).show();
+                        } else {
+                            url = "http://ws.audioscrobbler.com/2.0/?method=album.search&album="
+                                    + search + "&api_key=b6ff6fe3192f66735629799c2f4dd988&format=json";
+                            new GetList().execute();
+                        }
                     }
                     return true;
                 }
@@ -92,7 +97,8 @@ public class HomeFragment extends Fragment {
         data.clear();
         mAdapter.notifyItemRangeRemoved(0, size);
         mRecycler.setAdapter(new AlbumAdapter(new ArrayList<Album>()));
-
+        mSearch.setText("");
+        mTvString.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -164,6 +170,12 @@ public class HomeFragment extends Fragment {
             if (pd.isShowing())
                 pd.dismiss();
 
+            if (!data.isEmpty())
+                mTvString.setVisibility(View.INVISIBLE);
+
+            mAdapter = new AlbumAdapter(data);
+            mRecycler.setAdapter(mAdapter);
+            mRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
     }
 }

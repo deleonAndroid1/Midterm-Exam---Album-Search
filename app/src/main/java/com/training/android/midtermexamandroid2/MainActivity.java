@@ -1,15 +1,17 @@
 package com.training.android.midtermexamandroid2;
 
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
-
 
 
     @Override
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
+        CheckWifiAvailability();
         initToolbar();
     }
 
@@ -29,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void CheckWifiAvailability() {
+        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        if (!wifi.isWifiEnabled()) {
+            Toast.makeText(this, "No network Connection", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
 
 
