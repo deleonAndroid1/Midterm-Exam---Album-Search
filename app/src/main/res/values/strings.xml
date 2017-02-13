@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Midterm Exam</string>
+    <string name="tool_title">Album Search</string>
+    <string name="clear">Clear</string>
+    <string name="no_data">There's no album present at the moment</string>
+</resources>
